@@ -127,6 +127,10 @@ game.Players.PlayerAdded:Connect(function(v)
 end)
 end)
 
+esp:Toggle("绘制所有", false, function(state)
+loadstring(game:HttpGet('https://pastebin.com/raw/hpMC6ULU'))()
+end)
+
 local tab = win:Tab("杂项")
 
 tab:Toggle("改速度/30速度", false, function(state)
