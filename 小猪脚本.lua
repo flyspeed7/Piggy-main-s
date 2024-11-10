@@ -127,13 +127,13 @@ game.Players.PlayerAdded:Connect(function(v)
 end)
 end)
 
-esp:Toggle("绘制所有", false, function(state)
+esp:Toggle("绘制小猪[是机器人不是玩家!]", false, function(state)
 loadstring(game:HttpGet('https://pastebin.com/raw/hpMC6ULU'))()
 end)
 
 local tab = win:Tab("杂项")
 
-tab:Toggle("改速度/30速度", false, function(state)
+tab:Toggle("改30速度", false, function(state)
 print("你的速度被更改为 30")
               game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 30
 
