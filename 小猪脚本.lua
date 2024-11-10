@@ -28,7 +28,7 @@ end)
 
 uihide = false
 
-local win = lib:Window("NOOB-Team 小凌",Color3.fromRGB(255, 154, 0), Enum.KeyCode.RightControl) 
+local win = lib:Window("冬凌 | Piggy",Color3.fromRGB(255, 154, 0), Enum.KeyCode.RightControl) 
 
 local XX = win:Tab("信息栏")
 
