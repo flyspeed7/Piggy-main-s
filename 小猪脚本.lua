@@ -43,7 +43,7 @@ end)
 
 local esp = win:Tab("绘制页面")
 
-esp:Toggle("绘制物品", false, function(state)
+esp:Toggle("绘制玩家 1", false, function(state)
 print("加载完成")
               local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -100,7 +100,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 end)
 
-esp:Toggle("绘制玩家", false, function(state)
+esp:Toggle("绘制玩家 2", false, function(state)
 local function ApplyESP(v)
    if v.Character and v.Character:FindFirstChildOfClass'Humanoid' then
        v.Character.Humanoid.NameDisplayDistance = 9e9
@@ -128,10 +128,88 @@ end)
 end)
 
 esp:Toggle("绘制小猪[是机器人不是玩家!]", false, function(state)
-loadstring(game:HttpGet('https://pastebin.com/raw/hpMC6ULU'))()
-end)
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 
-local tab = win:Tab("杂项")
+-- 等待怪物模型被加载
+local function waitUntilCharacterLoaded(character)
+    if character:FindFirstChild("Humanoid") then
+        return
+    end
+    character.ChildAdded:Wait()
+    waitUntilCharacterLoaded(character)
+end
+
+-- 检测怪物并高亮显示
+local function highlightMonsters()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            waitUntilCharacterLoaded(player.Character)
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- 在这里添加高亮显示逻辑，例如创建一个透明的球体覆盖在怪物身上
+                local highlight = Instance.new("Part")
+                highlight.Name = "Highlight"
+                highlight.Size = Vector3.new(2, 2, 2)
+                highlight.Transparency = 0.5
+                highlight.BrickColor = BrickColor.new("Bright red")
+                highlight.CanCollide = false
+                highlight.Anchored = true
+                highlight.Position = humanoidRootPart.Position
+                highlight.Parent = Workspace
+            end
+        end
+    end
+end
+
+-- 定期检测怪物并更新高亮显示
+local function updateHighlights()
+    while true do
+        highlightMonsters()
+        wait(1) -- 每秒更新一次
+    end
+end
+
+-- 启动高亮显示怪物的循环
+updateHighlights()
+
+end)
+esp:Toggle("绘制物品", false, function(state)
+-- 假设你已经有一个名为"HighlightItem"的Part，用于高亮显示
+local highlightPart = script.Parent:WaitForChild("HighlightItem")
+
+-- 函数：高亮显示物品
+local function highlightItem(item)
+    -- 将高亮显示的Part复制到物品的位置
+    local clone = highlightPart:Clone()
+    clone.Parent = workspace
+    clone.Position = item.Position
+    clone.Size = item.Size
+    clone.Transparency = 0.5 -- 设置透明度，以便可以看到物品
+
+    -- 等待一段时间，然后删除高亮显示的Part
+    wait(5) -- 等待5秒
+    clone:Destroy()
+end
+
+-- 监听物品的添加事件
+local function onItemAdded(item)
+    -- 调用高亮显示函数
+    highlightItem(item)
+end
+
+-- 假设你有一个事件，当物品被添加时会触发
+local itemAddedEvent = Instance.new("RemoteEvent")
+itemAddedEvent.Name = "ItemAdded"
+itemAddedEvent.Parent = script.Parent
+
+-- 监听事件
+itemAddedEvent.OnServerEvent:Connect(onItemAdded)
+
+end)
+local tab = win:Tab("玩家")
 
 tab:Toggle("改30速度", false, function(state)
 print("你的速度被更改为 30")
